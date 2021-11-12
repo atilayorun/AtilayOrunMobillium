@@ -5,9 +5,10 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/img_slider"
+        android:id="@+id/iv_slider"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:contentDescription="@string/iv_slider_description"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,7 +26,7 @@
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_20"
         android:fontFamily="@font/lato_semibold"
-        app:layout_constraintBottom_toBottomOf="@+id/img_slider"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_slider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent" />

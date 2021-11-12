@@ -43,7 +43,7 @@ class MoviesUpcomingAdapter(listener:MoviesUpcomingAdapterListener) : RecyclerVi
         holder.binding.clContainer.setOnClickListener{
             listener.itemOnClickListener(item.id)
         }
-        holder.ivChevronRight.loadImage("https://www.themoviedb.org/t/p/w220_and_h330_face/${item.poster_path}")
+        holder.ivMoviePhoto.loadImage("https://www.themoviedb.org/t/p/w220_and_h330_face/${item.poster_path}")
     }
 
     override fun getItemCount(): Int {

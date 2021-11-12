@@ -5,18 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
-import com.bumptech.glide.Glide
 import com.example.atilayorunmobillium.R
-import com.example.atilayorunmobillium.Util.Util
 import com.example.atilayorunmobillium.Util.Util.loadImage
 import com.example.atilayorunmobillium.model.Results
-import java.lang.invoke.ConstantCallSite
 import kotlin.Boolean as Boolean1
 
 class ViewPagerAdapter(internal var context: Context, internal var itemList: List<Results>) :
@@ -32,7 +27,7 @@ class ViewPagerAdapter(internal var context: Context, internal var itemList: Lis
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
         val holder = ViewHolder()
         val itemView = mLayoutInflater.inflate(R.layout.layout_item_view_pager, container, false)
-        holder.itemImage = itemView.findViewById(R.id.img_slider) as ImageView
+        holder.itemImage = itemView.findViewById(R.id.iv_slider) as ImageView
         holder.tvTitle = itemView.findViewById(R.id.tv_title)
         holder.tvDescription = itemView.findViewById(R.id.tv_description)
         if (pos > this.itemList.size - 1)

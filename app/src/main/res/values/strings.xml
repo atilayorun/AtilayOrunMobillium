@@ -4,4 +4,11 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="on_failure">Beklenmeyen bir sorun ile karşılaşıldı.</string>
     <string name="loading">Yükleniyor</string>
+    <string name="iv_movie_detail_photo_description">Film detay fotoğrafı</string>
+    <string name="iv_imbd_icon_description">IMBD İkon</string>
+    <string name="iv_star_description">Star İkon</string>
+    <string name="rate_description">/10</string>
+    <string name="iv_slider_description">Slider Fotoğraf</string>
+    <string name="iv_movie_photo_description">Film Fotoğraf</string>
+    <string name="iv_chevron_right_description">Sağ Yön Oku</string>
 </resources>
