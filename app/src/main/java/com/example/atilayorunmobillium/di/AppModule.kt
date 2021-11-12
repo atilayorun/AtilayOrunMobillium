@@ -13,12 +13,11 @@ import javax.inject.Singleton
 @Module
 @InstallIn(ApplicationComponent::class)
 object AppModule {
-    val baseUrl = "https://api.themoviedb.org/"
     @Singleton
     @Provides
     fun provideRetrofit(): Retrofit =
         Retrofit.Builder()
-            .baseUrl(baseUrl)
+            .baseUrl("https://api.themoviedb.org/3/")
             .client(OkHttpClient())
             .addConverterFactory(GsonConverterFactory.create())
             .build()

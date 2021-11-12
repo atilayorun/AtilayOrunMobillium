@@ -1,4 +1,4 @@
-package com.example.atilayorunmobillium
+package com.example.atilayorunmobillium.ui
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp
