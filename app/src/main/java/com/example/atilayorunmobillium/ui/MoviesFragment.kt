@@ -39,7 +39,7 @@ class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterLi
     ): View {
         _binding = FragmentMoviesBinding.inflate(inflater, container, false)
 
-        responseCount=0
+        responseCount = 0
         setupAdapter()
 
         viewModelTransactions()
@@ -49,6 +49,9 @@ class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterLi
     }
 
     private fun listeners() {
+        binding.swipe.setOnRefreshListener {
+            viewModelTransactions()
+        }
         binding.viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {
 
@@ -128,10 +131,13 @@ class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterLi
         })
     }
 
-    private fun dismissProgressDialog(){
+    private fun dismissProgressDialog() {
         responseCount++
-        if (responseCount == 2)
+        if (responseCount >= 2) {
+            if (binding.swipe.isRefreshing)
+                binding.swipe.isRefreshing = false
             progressDialogManager.dismissProgressDialog()
+        }
     }
 
     private fun setupAdapter() {
