@@ -1,8 +1,10 @@
-package com.example.atilayorunmobillium;
+package com.example.atilayorunmobillium.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import com.example.atilayorunmobillium.R;
 
 public class MainActivity extends AppCompatActivity {
 
