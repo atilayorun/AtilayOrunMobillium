@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.atilayorunmobillium.Util.Util.loadImage
 import com.example.atilayorunmobillium.databinding.ItemMoviesUpcomingBinding
 import com.example.atilayorunmobillium.model.Results
 
@@ -42,9 +43,7 @@ class MoviesUpcomingAdapter(listener:MoviesUpcomingAdapterListener) : RecyclerVi
         holder.binding.clContainer.setOnClickListener{
             listener.itemOnClickListener(item.id)
         }
-        Glide.with(holder.binding.ivChevronRight)
-            .load("https://www.themoviedb.org/t/p/w220_and_h330_face/${item.poster_path}")
-            .into(holder.binding.ivChevronRight)
+        holder.ivChevronRight.loadImage("https://www.themoviedb.org/t/p/w220_and_h330_face/${item.poster_path}")
     }
 
     override fun getItemCount(): Int {

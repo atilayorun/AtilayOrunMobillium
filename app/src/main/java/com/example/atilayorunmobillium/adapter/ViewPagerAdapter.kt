@@ -13,6 +13,8 @@ import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.bumptech.glide.Glide
 import com.example.atilayorunmobillium.R
+import com.example.atilayorunmobillium.Util.Util
+import com.example.atilayorunmobillium.Util.Util.loadImage
 import com.example.atilayorunmobillium.model.Results
 import java.lang.invoke.ConstantCallSite
 import kotlin.Boolean as Boolean1
@@ -37,9 +39,7 @@ class ViewPagerAdapter(internal var context: Context, internal var itemList: Lis
             pos = 0
 
         holder.sliderItem = this.itemList[pos]
-        Glide.with(holder.itemImage.context)
-            .load("https://www.themoviedb.org/t/p/w220_and_h330_face/${itemList[pos].poster_path}")
-            .into(holder.itemImage)
+        holder.itemImage.loadImage("https://www.themoviedb.org/t/p/w220_and_h330_face/${itemList[pos].poster_path}")
 
         (container as ViewPager).addView(itemView)
 

@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.MovieDetailFragment"
     android:fillViewport="true"
+    tools:context=".ui.MovieDetailFragment"
     tools:ignore="SpeakableTextPresentCheck">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -15,13 +15,12 @@
 
         <ImageView
             android:id="@+id/iv_movie_detail_photo"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="256dp"
             android:scaleType="fitXY"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@tools:sample/backgrounds/scenic" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/iv_imbd_icon"
@@ -48,9 +47,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
-            android:textSize="13sp"
-            android:textColor="@color/black"
             android:fontFamily="@font/lato_regular"
+            android:textColor="@color/black"
+            android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="@+id/iv_star"
             app:layout_constraintStart_toEndOf="@+id/iv_star"
             app:layout_constraintTop_toTopOf="@+id/iv_star" />
@@ -60,10 +59,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="2dp"
-            android:text="/10"
-            android:textSize="13sp"
-            android:textColor="@color/gray"
             android:fontFamily="@font/lato_regular"
+            android:text="/10"
+            android:textColor="@color/gray"
+            android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="@+id/movie_rate"
             app:layout_constraintStart_toEndOf="@+id/movie_rate"
             app:layout_constraintTop_toTopOf="@+id/movie_rate" />
@@ -83,9 +82,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:textSize="13sp"
             android:fontFamily="@font/lato_regular"
             android:textColor="@color/black"
+            android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="@+id/view_yellow_dot"
             app:layout_constraintStart_toEndOf="@+id/view_yellow_dot"
             app:layout_constraintTop_toTopOf="@+id/view_yellow_dot" />
@@ -108,9 +107,9 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:fontFamily="@font/lato_regular"
             android:textColor="@color/black"
             android:textSize="15sp"
-            android:fontFamily="@font/lato_regular"
             app:layout_constraintEnd_toEndOf="@+id/tv_movie_detail_title"
             app:layout_constraintStart_toStartOf="@+id/tv_movie_detail_title"
             app:layout_constraintTop_toBottomOf="@+id/tv_movie_detail_title" />

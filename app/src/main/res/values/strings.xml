@@ -2,4 +2,6 @@
     <string name="app_name">AtilayOrunMobillium</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="on_failure">Beklenmeyen bir sorun ile karşılaşıldı.</string>
+    <string name="loading">Yükleniyor</string>
 </resources>
