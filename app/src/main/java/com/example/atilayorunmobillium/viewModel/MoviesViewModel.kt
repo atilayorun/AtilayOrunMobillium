@@ -12,13 +12,24 @@ import kotlinx.coroutines.launch
 
 class MoviesViewModel @ViewModelInject constructor(private val retrofitRepository: RetrofitRepository) :
     ViewModel() {
-    val moviesLiveData = MutableLiveData<Movies>()
+    val moviesNowPlayingLiveData = MutableLiveData<Movies>()
+    val moviesUpcomingLiveData = MutableLiveData<Movies>()
 
     fun getMovieNowPlaying() {
         CoroutineScope(Dispatchers.IO).launch {
             retrofitRepository.getMovieNowPlaying(ApiService.authorization).let {
                 if(it.isSuccessful){
-                    moviesLiveData.postValue(it.body())
+                    moviesNowPlayingLiveData.postValue(it.body())
+                }
+            }
+        }
+    }
+
+    fun getMovieUpcoming(){
+        CoroutineScope(Dispatchers.IO).launch {
+            retrofitRepository.getMovieUpcoming(ApiService.authorization,1).let {
+                if(it.isSuccessful){
+                    moviesUpcomingLiveData.postValue(it.body())
                 }
             }
         }

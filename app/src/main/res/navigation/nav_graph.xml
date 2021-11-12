@@ -9,5 +9,18 @@
         android:id="@+id/nowPlayingFragment"
         android:name="com.example.atilayorunmobillium.ui.MoviesFragment"
         android:label="fragment_now_playing"
-        tools:layout="@layout/fragment_movies" />
+        tools:layout="@layout/fragment_movies" >
+        <action
+            android:id="@+id/action_nowPlayingFragment_to_movieDetailFragment"
+            app:destination="@id/movieDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/movieDetailFragment"
+        android:name="com.example.atilayorunmobillium.ui.MovieDetailFragment"
+        android:label="fragment_movie_detail"
+        tools:layout="@layout/fragment_movie_detail" >
+        <argument
+            android:name="movieId"
+            app:argType="integer" />
+    </fragment>
 </navigation>

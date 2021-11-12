@@ -50,7 +50,7 @@ class ViewPagerAdapter(internal var context: Context, internal var itemList: Lis
         return itemView
     }
 
-    internal class ViewHolder {
+    class ViewHolder {
         lateinit var sliderItem: Results
         lateinit var itemImage: ImageView
         lateinit var tvTitle: TextView

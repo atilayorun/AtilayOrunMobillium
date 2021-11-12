@@ -8,8 +8,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.example.atilayorunmobillium.R
+import com.example.atilayorunmobillium.adapter.MoviesUpcomingAdapter
 import com.example.atilayorunmobillium.adapter.ViewPagerAdapter
 import com.example.atilayorunmobillium.databinding.FragmentMoviesBinding
 import com.example.atilayorunmobillium.model.Results
@@ -17,12 +20,14 @@ import com.example.atilayorunmobillium.viewModel.MoviesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class MoviesFragment : Fragment() {
+class MoviesFragment : Fragment(),MoviesUpcomingAdapter.MoviesUpcomingAdapterListener {
     private var _binding: FragmentMoviesBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewPagerAdapter: ViewPagerAdapter
     private val viewModel: MoviesViewModel by viewModels()
+
+    private lateinit var viewPagerAdapter: ViewPagerAdapter
     private var currentIndex:Int=0
+    private lateinit var adapter: MoviesUpcomingAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,9 +35,15 @@ class MoviesFragment : Fragment() {
     ): View {
         _binding = FragmentMoviesBinding.inflate(inflater, container, false)
 
-        viewModel.getMovieNowPlaying()
-        viewModelSetObserver()
+        setupAdapter()
 
+        viewModelTransactions()
+        setObservers()
+        listeners()
+        return binding.root
+    }
+
+    private fun listeners(){
         binding.viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener{
             override fun onPageScrollStateChanged(state: Int) {
 
@@ -46,7 +57,6 @@ class MoviesFragment : Fragment() {
                 updatePageIndicator(position)
             }
         })
-        return binding.root
     }
 
     private fun setupViewPagerAdapter(listResults:List<Results>) {
@@ -54,11 +64,26 @@ class MoviesFragment : Fragment() {
         binding.viewPager.adapter=viewPagerAdapter
     }
 
-    private fun viewModelSetObserver() {
-        viewModel.moviesLiveData.observe(viewLifecycleOwner, {
+    private fun viewModelTransactions(){
+        viewModel.getMovieNowPlaying()
+        viewModel.getMovieUpcoming()
+    }
+
+    private fun setObservers() {
+        viewModel.moviesNowPlayingLiveData.observe(viewLifecycleOwner, {
             addPageIndicators()
             setupViewPagerAdapter(it.results)
         })
+        viewModel.moviesUpcomingLiveData.observe(viewLifecycleOwner, {
+            adapter.setData(it.results)
+        })
+    }
+
+    private fun setupAdapter() {
+        adapter = MoviesUpcomingAdapter(this)
+        binding.rvMoviesUpcoming.adapter = adapter
+        binding.rvMoviesUpcoming.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
     }
 
     private fun addPageIndicators()
@@ -86,5 +111,10 @@ class MoviesFragment : Fragment() {
                 imageView.setImageResource(R.drawable.non_active_dot)
             }
         }
+    }
+
+    override fun itemOnClickListener(movieId: Int) {
+        val action = MoviesFragmentDirections.actionNowPlayingFragmentToMovieDetailFragment(movieId)
+        findNavController().navigate(action)
     }
 }

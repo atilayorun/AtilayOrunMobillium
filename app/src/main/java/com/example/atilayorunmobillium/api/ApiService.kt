@@ -1,9 +1,11 @@
 package com.example.atilayorunmobillium.api
 
+import com.example.atilayorunmobillium.model.MovieDetail
 import com.example.atilayorunmobillium.model.Movies
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiService {
@@ -15,4 +17,14 @@ interface ApiService {
     suspend fun getMovieNowPlaying(
         @Header("Authorization") authorization: String
     ): Response<Movies>
+
+    @GET("movie/upcoming")
+    suspend fun getMovieUpcoming(
+        @Header("Authorization") authorization: String,@Query("page") page:Int
+    ): Response<Movies>
+
+    @GET("movie/{movie_id}")
+    suspend fun getMovieDetail(
+        @Header("Authorization") authorization: String,@Path("movie_id") movieId:Int
+    ):Response<MovieDetail>
 }
