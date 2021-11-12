@@ -1,6 +1,8 @@
 package com.example.atilayorunmobillium.viewModel
 
 import android.content.res.Resources
+import android.widget.ImageView
+import androidx.databinding.BindingAdapter
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,6 +14,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import com.example.atilayorunmobillium.R
+import com.example.atilayorunmobillium.Util.Util.loadImage
 
 class MovieDetailViewModel @ViewModelInject constructor(private val retrofitRepository: RetrofitRepository) :
     ViewModel() {
@@ -33,6 +36,14 @@ class MovieDetailViewModel @ViewModelInject constructor(private val retrofitRepo
                     response.postValue(NetworkResult.Error(e.message))
                 }
             }
+        }
+    }
+
+    companion object {
+        @JvmStatic
+        @BindingAdapter("imgUrl")
+        fun loadImage(view: ImageView, url: String?=null) {
+            view.loadImage("https://www.themoviedb.org/t/p/w220_and_h330_face/$url")
         }
     }
 }

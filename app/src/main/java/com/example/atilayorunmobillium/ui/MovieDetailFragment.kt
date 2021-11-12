@@ -8,13 +8,11 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import com.bumptech.glide.Glide
+import com.example.atilayorunmobillium.BR
 import com.example.atilayorunmobillium.R
 import com.example.atilayorunmobillium.Util.NetworkResult
 import com.example.atilayorunmobillium.Util.ProgressDialogManager
-import com.example.atilayorunmobillium.Util.Util.loadImage
 import com.example.atilayorunmobillium.databinding.FragmentMovieDetailBinding
-import com.example.atilayorunmobillium.model.MovieDetail
 import com.example.atilayorunmobillium.viewModel.MovieDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -29,8 +27,10 @@ class MovieDetailFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentMovieDetailBinding.inflate(inflater, container, false)
+        setBinding()
+
         viewModelTransactions()
         setObservers()
         return binding.root
@@ -40,15 +40,14 @@ class MovieDetailFragment : Fragment() {
         viewModel.getMovieDetail(args.movieId)
     }
 
+    private fun setBinding(){
+        binding.lifecycleOwner = this
+        binding.setVariable(BR.viewModel,viewModel)
+    }
+
     private fun setObservers() {
         viewModel.response.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is NetworkResult.Success -> {
-                    progressDialogManager.dismissProgressDialog()
-                    response.data?.let {
-                        setUi(it)
-                    }
-                }
                 is NetworkResult.Error -> {
                     progressDialogManager.dismissProgressDialog()
                     Toast.makeText(
@@ -67,13 +66,5 @@ class MovieDetailFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private fun setUi(movieDetail: MovieDetail) {
-        binding.movieRate.text = movieDetail.vote_average.toString()
-        binding.tvMovieDetailDate.text = movieDetail.release_date
-        binding.tvMovieDetailTitle.text = movieDetail.title
-        binding.tvMovieDetailDescription.text = movieDetail.overview
-        binding.ivMovieDetailPhoto.loadImage("https://www.themoviedb.org/t/p/w220_and_h330_face/${movieDetail.poster_path}")
     }
 }
