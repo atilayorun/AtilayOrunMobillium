@@ -43,7 +43,9 @@ class MovieDetailViewModel @ViewModelInject constructor(private val retrofitRepo
         @JvmStatic
         @BindingAdapter("imgUrl")
         fun loadImage(view: ImageView, url: String?=null) {
-            view.loadImage("https://www.themoviedb.org/t/p/w220_and_h330_face/$url")
+            url.let {
+                view.loadImage("${ApiService.photoUrl+url}")
+            }
         }
     }
 }

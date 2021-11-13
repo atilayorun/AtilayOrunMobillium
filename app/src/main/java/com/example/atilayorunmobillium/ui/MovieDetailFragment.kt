@@ -48,6 +48,9 @@ class MovieDetailFragment : Fragment() {
     private fun setObservers() {
         viewModel.response.observe(viewLifecycleOwner) { response ->
             when (response) {
+                is NetworkResult.Success -> {
+                    progressDialogManager.dismissProgressDialog()
+                }
                 is NetworkResult.Error -> {
                     progressDialogManager.dismissProgressDialog()
                     Toast.makeText(
