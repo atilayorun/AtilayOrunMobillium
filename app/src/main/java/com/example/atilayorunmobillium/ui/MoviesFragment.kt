@@ -39,9 +39,7 @@ class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterLi
     ): View {
         _binding = FragmentMoviesBinding.inflate(inflater, container, false)
 
-        responseCount = 0
         setupAdapter()
-
         viewModelTransactions()
         setObservers()
         listeners()
@@ -133,7 +131,7 @@ class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterLi
 
     private fun dismissProgressDialog() {
         responseCount++
-        if (responseCount >= 2) {
+        if (responseCount % 2 == 0) {
             if (binding.swipe.isRefreshing)
                 binding.swipe.isRefreshing = false
             progressDialogManager.dismissProgressDialog()

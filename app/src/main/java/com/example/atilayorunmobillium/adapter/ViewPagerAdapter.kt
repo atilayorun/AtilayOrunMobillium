@@ -7,19 +7,21 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.example.atilayorunmobillium.R
 import com.example.atilayorunmobillium.Util.Util.loadImage
 import com.example.atilayorunmobillium.api.ApiService
+import com.example.atilayorunmobillium.databinding.ItemMoviesUpcomingBinding
+import com.example.atilayorunmobillium.databinding.LayoutItemViewPagerBinding
 import com.example.atilayorunmobillium.model.Results
+import kotlinx.coroutines.NonDisposableHandle.parent
 import kotlin.Boolean as Boolean1
 
-class ViewPagerAdapter(internal var context: Context, internal var itemList: List<Results>) :
+class ViewPagerAdapter(internal var context: Context, private var itemList: List<Results>) :
     PagerAdapter() {
 
-    private var mLayoutInflater: LayoutInflater =
-        this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     private var pos = 0
 
     override fun getCount(): Int {
@@ -27,31 +29,30 @@ class ViewPagerAdapter(internal var context: Context, internal var itemList: Lis
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        val holder = ViewHolder()
-        val itemView = mLayoutInflater.inflate(R.layout.layout_item_view_pager, container, false)
-        holder.itemImage = itemView.findViewById(R.id.iv_slider) as ImageView
-        holder.tvTitle = itemView.findViewById(R.id.tv_title)
-        holder.tvDescription = itemView.findViewById(R.id.tv_description)
+        val layoutItemViewPagerBinding : LayoutItemViewPagerBinding = LayoutItemViewPagerBinding.inflate(
+            LayoutInflater.from(context),
+            container,
+            false
+        )
+        val holder = ViewHolder(layoutItemViewPagerBinding)
+
         if (pos > this.itemList.size - 1)
             pos = 0
 
-        holder.sliderItem = this.itemList[pos]
+        val item = this.itemList[pos]
+        (container as ViewPager).addView(layoutItemViewPagerBinding.root)
         holder.itemImage.loadImage("${ApiService.photoUrl + itemList[pos].poster_path}")
-
-        (container as ViewPager).addView(itemView)
-
         holder.itemImage.scaleType = ImageView.ScaleType.FIT_XY
-        holder.tvTitle.text = holder.sliderItem.title
-        holder.tvDescription.text = holder.sliderItem.overview
+        holder.tvTitle.text = item.title
+        holder.tvDescription.text = item.overview
         pos++
-        return itemView
+        return layoutItemViewPagerBinding.root
     }
 
-    class ViewHolder {
-        lateinit var sliderItem: Results
-        lateinit var itemImage: ImageView
-        lateinit var tvTitle: TextView
-        lateinit var tvDescription: TextView
+    class ViewHolder (binding: LayoutItemViewPagerBinding) : RecyclerView.ViewHolder(binding.root){
+        val itemImage: ImageView = binding.ivSlider
+        val tvTitle: TextView = binding.tvTitle
+        val tvDescription: TextView = binding.tvDescription
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
