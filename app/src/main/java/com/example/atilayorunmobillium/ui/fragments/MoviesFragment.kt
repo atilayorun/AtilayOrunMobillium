@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.example.atilayorunmobillium.R
 import com.example.atilayorunmobillium.Util.NetworkResult
-import com.example.atilayorunmobillium.Util.ProgressDialogManager
 import com.example.atilayorunmobillium.ui.adapters.MoviesUpcomingAdapter
 import com.example.atilayorunmobillium.ui.adapters.ViewPagerAdapter
 import com.example.atilayorunmobillium.databinding.FragmentMoviesBinding
@@ -35,8 +34,6 @@ class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterLi
     private val viewModel: MoviesViewModel by viewModels()
     private lateinit var viewPagerAdapter: ViewPagerAdapter
     private lateinit var adapter: MoviesUpcomingAdapter
-    private var progressDialogManager: ProgressDialogManager? = null
-    private var responseCount = 0
     private var currentIndex: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,27 +54,13 @@ class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterLi
         return binding.root
     }
 
-    private fun setProgressDialog() {
-        progressDialogManager = ProgressDialogManager().apply {
-            this.showProgressDialog(
-                requireActivity(),
-                getString(R.string.loading),
-                false
-            )
-        }
-    }
-
     private fun listeners() {
         binding.appbarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             binding.swipe.isEnabled = verticalOffset == 0
         })
 
         binding.swipe.setOnRefreshListener {
-            progressDialogManager?.showProgressDialog(
-                requireActivity(),
-                getString(R.string.loading),
-                false
-            )
+            showProgressBar()
             viewModelTransactions()
         }
         binding.viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -122,14 +105,14 @@ class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterLi
         viewModel.responseNowPlaying.observe(requireActivity(), { response ->
             when (response) {
                 is NetworkResult.Success -> {
-                    dismissProgressDialogAndSwipe()
+                    dismissProgressBarAndSwipe()
                     response.data?.let {
                         addPageIndicators()
                         setupViewPagerAdapter(it.results)
                     }
                 }
                 is NetworkResult.Error -> {
-                    dismissProgressDialogAndSwipe()
+                    dismissProgressBarAndSwipe()
                     Toast.makeText(
                         requireContext(),
                         response.message.toString(),
@@ -140,12 +123,9 @@ class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterLi
         })
     }
 
-    private fun dismissProgressDialogAndSwipe() {
-        responseCount++
-        if (binding.swipe.isRefreshing)
-            binding.swipe.isRefreshing = false
-        if (responseCount % 2 == 0)
-            progressDialogManager?.dismissProgressDialog()
+    private fun dismissProgressBarAndSwipe() {
+        hideSwipe()
+        hideProgressBar()
     }
 
     private fun setupAdapter() {
@@ -196,22 +176,14 @@ class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterLi
         findNavController().navigate(action)
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        viewModel.responseNowPlaying.removeObservers(this)
-        _binding = null
-    }
-
     private fun addLoadListener() {
         adapter.addLoadStateListener { combinedLoadStates ->
             when (val loadState = combinedLoadStates.source.append) {
                 is LoadState.NotLoading -> {
-                    progressDialogManager.let {
-                        progressDialogManager?.dismissProgressDialog()
-                    }
+                    dismissProgressBarAndSwipe()
                 }
                 is LoadState.Loading -> {
-                    setProgressDialog()
+                    showProgressBar()
                 }
                 is LoadState.Error -> {
                     Toast.makeText(
@@ -222,5 +194,24 @@ class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterLi
                 }
             }
         }
+    }
+
+    private fun showProgressBar() {
+        binding.pbMovies.visibility = View.VISIBLE
+    }
+
+    private fun hideProgressBar(){
+        binding.pbMovies.visibility = View.GONE
+    }
+
+    private fun hideSwipe(){
+        if (binding.swipe.isRefreshing)
+            binding.swipe.isRefreshing = false
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.responseNowPlaying.removeObservers(this)
+        _binding = null
     }
 }

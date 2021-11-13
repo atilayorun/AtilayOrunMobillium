@@ -9,9 +9,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.example.atilayorunmobillium.BR
-import com.example.atilayorunmobillium.R
 import com.example.atilayorunmobillium.Util.NetworkResult
-import com.example.atilayorunmobillium.Util.ProgressDialogManager
 import com.example.atilayorunmobillium.databinding.FragmentMovieDetailBinding
 import com.example.atilayorunmobillium.ui.viewModels.MovieDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -22,7 +20,6 @@ class MovieDetailFragment : Fragment() {
     private val binding get() = _binding!!
     private val viewModel: MovieDetailViewModel by viewModels()
     private val args by navArgs<MovieDetailFragmentArgs>()
-    private lateinit var progressDialogManager: ProgressDialogManager
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,23 +45,15 @@ class MovieDetailFragment : Fragment() {
         viewModel.response.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is NetworkResult.Success -> {
-                    progressDialogManager.dismissProgressDialog()
+                    binding.pbMovieDetail.visibility = View.GONE
                 }
                 is NetworkResult.Error -> {
-                    progressDialogManager.dismissProgressDialog()
+                    binding.pbMovieDetail.visibility = View.GONE
                     Toast.makeText(
                         requireContext(),
                         response.message.toString(),
                         Toast.LENGTH_SHORT
                     ).show()
-                }
-
-                is NetworkResult.Loading -> {
-                    progressDialogManager = ProgressDialogManager().apply {
-                        this.showProgressDialog(
-                            requireActivity(), getString(R.string.loading), false
-                        )
-                    }
                 }
             }
         }
