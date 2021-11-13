@@ -2,6 +2,8 @@ package com.example.atilayorunmobillium.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -10,8 +12,7 @@ import com.example.atilayorunmobillium.api.ApiService
 import com.example.atilayorunmobillium.databinding.ItemMoviesUpcomingBinding
 import com.example.atilayorunmobillium.model.Results
 
-class MoviesUpcomingAdapter(listener:MoviesUpcomingAdapterListener) : RecyclerView.Adapter<MoviesUpcomingAdapter.ViewHolder>(){
-    private var listResults: List<Results> = listOf()
+class MoviesUpcomingAdapter(listener:MoviesUpcomingAdapterListener) : PagingDataAdapter<Results,MoviesUpcomingAdapter.ViewHolder>(ResultsDiffCallback){
     private val listener = listener
 
     interface MoviesUpcomingAdapterListener{
@@ -23,7 +24,6 @@ class MoviesUpcomingAdapter(listener:MoviesUpcomingAdapterListener) : RecyclerVi
         val tvMovieDate = binding.tvMovieDate
         val tvMovieDescription = binding.tvMovieDescription
         val tvMovieTitle = binding.tvMovieTitle
-        val ivChevronRight = binding.ivChevronRight
         val clContainer= binding.clContainer
     }
 
@@ -37,22 +37,23 @@ class MoviesUpcomingAdapter(listener:MoviesUpcomingAdapterListener) : RecyclerVi
     }
 
     override fun onBindViewHolder(holder: MoviesUpcomingAdapter.ViewHolder, position: Int) {
-        val item = listResults[position]
-        holder.binding.tvMovieDate.text = item.release_date
-        holder.binding.tvMovieDescription.text = item.overview
-        holder.binding.tvMovieTitle.text = item.title
-        holder.binding.clContainer.setOnClickListener{
-            listener.itemOnClickListener(item.id)
+        val item = getItem(position)
+        holder.tvMovieDate.text = item?.release_date
+        holder.tvMovieDescription.text = item?.overview
+        holder.tvMovieTitle.text = item?.title
+        holder.clContainer.setOnClickListener{
+            listener.itemOnClickListener(item!!.id)
         }
-        holder.ivMoviePhoto.loadImage("${ApiService.photoUrl}${item.poster_path}")
+        holder.ivMoviePhoto.loadImage("${ApiService.photoUrl}${item?.poster_path}")
     }
 
-    override fun getItemCount(): Int {
-        return listResults.size
-    }
+    object ResultsDiffCallback: DiffUtil.ItemCallback<Results>() {
+        override fun areItemsTheSame(oldItem: Results, newItem: Results): Boolean {
+            return oldItem.id == newItem.id
+        }
 
-    fun setData(listResults: List<Results>) {
-        this.listResults = listResults
-        notifyDataSetChanged()
+        override fun areContentsTheSame(oldItem:Results, newItem: Results): Boolean {
+            return oldItem == newItem
+        }
     }
 }

@@ -9,7 +9,9 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.ViewPager
 import com.example.atilayorunmobillium.R
@@ -20,34 +22,62 @@ import com.example.atilayorunmobillium.adapter.ViewPagerAdapter
 import com.example.atilayorunmobillium.databinding.FragmentMoviesBinding
 import com.example.atilayorunmobillium.model.Results
 import com.example.atilayorunmobillium.viewModel.MoviesViewModel
+import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterListener {
+class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterListener,
+    ViewPagerAdapter.ViewPagerAdapterListener {
     private var _binding: FragmentMoviesBinding? = null
     private val binding get() = _binding!!
     private val viewModel: MoviesViewModel by viewModels()
     private lateinit var viewPagerAdapter: ViewPagerAdapter
-    private var currentIndex: Int = 0
     private lateinit var adapter: MoviesUpcomingAdapter
-    private lateinit var progressDialogManager: ProgressDialogManager
+    private var progressDialogManager: ProgressDialogManager? = null
     private var responseCount = 0
+    private var currentIndex: Int = 0
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setObservers()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMoviesBinding.inflate(inflater, container, false)
-
         setupAdapter()
+        setupViewPagerAdapter(listOf())
         viewModelTransactions()
-        setObservers()
         listeners()
+        setCollectLatest()
         return binding.root
     }
 
+    private fun setProgressDialog() {
+        progressDialogManager = ProgressDialogManager().apply {
+            this.showProgressDialog(
+                requireActivity(),
+                getString(R.string.loading),
+                false
+            )
+        }
+    }
+
     private fun listeners() {
+        binding.appbarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
+            binding.swipe.isEnabled = verticalOffset == 0
+        })
+
         binding.swipe.setOnRefreshListener {
+            progressDialogManager?.showProgressDialog(
+                requireActivity(),
+                getString(R.string.loading),
+                false
+            )
             viewModelTransactions()
         }
         binding.viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
@@ -70,55 +100,36 @@ class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterLi
     }
 
     private fun setupViewPagerAdapter(listResults: List<Results>) {
-        viewPagerAdapter = ViewPagerAdapter(requireContext(), listResults)
+        viewPagerAdapter = ViewPagerAdapter(requireContext(), listResults, this)
         binding.viewPager.adapter = viewPagerAdapter
     }
 
     private fun viewModelTransactions() {
         viewModel.getMovieNowPlaying()
-        viewModel.getMovieUpcoming()
+    }
+
+    private fun setCollectLatest() {
+        lifecycleScope.launch {
+            viewModel.getMovies().collectLatest {
+                if (binding.swipe.isRefreshing)
+                    binding.swipe.isRefreshing = false
+                adapter.submitData(it)
+            }
+        }
     }
 
     private fun setObservers() {
-        viewModel.responseNowPlaying.observe(viewLifecycleOwner, { response ->
+        viewModel.responseNowPlaying.observe(requireActivity(), { response ->
             when (response) {
                 is NetworkResult.Success -> {
-                    dismissProgressDialog()
+                    dismissProgressDialogAndSwipe()
                     response.data?.let {
                         addPageIndicators()
                         setupViewPagerAdapter(it.results)
                     }
                 }
                 is NetworkResult.Error -> {
-                    dismissProgressDialog()
-                    Toast.makeText(
-                        requireContext(),
-                        response.message.toString(),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-
-                is NetworkResult.Loading -> {
-                    progressDialogManager = ProgressDialogManager().apply {
-                        this.showProgressDialog(
-                            requireActivity(),
-                            getString(R.string.loading),
-                            false
-                        )
-                    }
-                }
-            }
-        })
-        viewModel.responseUpcoming.observe(viewLifecycleOwner, { response ->
-            when (response) {
-                is NetworkResult.Success -> {
-                    dismissProgressDialog()
-                    response.data?.let {
-                        adapter.setData(it.results)
-                    }
-                }
-                is NetworkResult.Error -> {
-                    dismissProgressDialog()
+                    dismissProgressDialogAndSwipe()
                     Toast.makeText(
                         requireContext(),
                         response.message.toString(),
@@ -129,13 +140,12 @@ class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterLi
         })
     }
 
-    private fun dismissProgressDialog() {
+    private fun dismissProgressDialogAndSwipe() {
         responseCount++
-        if (responseCount % 2 == 0) {
-            if (binding.swipe.isRefreshing)
-                binding.swipe.isRefreshing = false
-            progressDialogManager.dismissProgressDialog()
-        }
+        if (binding.swipe.isRefreshing)
+            binding.swipe.isRefreshing = false
+        if (responseCount % 2 == 0)
+            progressDialogManager?.dismissProgressDialog()
     }
 
     private fun setupAdapter() {
@@ -143,6 +153,7 @@ class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterLi
         binding.rvMoviesUpcoming.adapter = adapter
         binding.rvMoviesUpcoming.layoutManager =
             LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false)
+        addLoadListener()
     }
 
     private fun addPageIndicators() {
@@ -167,6 +178,7 @@ class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterLi
             imageView = binding.lytPageIndicator.getChildAt(i) as ImageView
             imageView.layoutParams = lp
             if (position == i) {
+                println("active dot position : $position")
                 imageView.setImageResource(R.drawable.active_dot)
             } else {
                 imageView.setImageResource(R.drawable.non_active_dot)
@@ -177,5 +189,37 @@ class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterLi
     override fun itemOnClickListener(movieId: Int) {
         val action = MoviesFragmentDirections.actionNowPlayingFragmentToMovieDetailFragment(movieId)
         findNavController().navigate(action)
+    }
+
+    override fun sliderItemOnClickListener(movieId: Int) {
+        val action = MoviesFragmentDirections.actionNowPlayingFragmentToMovieDetailFragment(movieId)
+        findNavController().navigate(action)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        viewModel.responseNowPlaying.removeObservers(this)
+    }
+
+    private fun addLoadListener() {
+        adapter.addLoadStateListener { combinedLoadStates ->
+            when (val loadState = combinedLoadStates.source.append) {
+                is LoadState.NotLoading -> {
+                    progressDialogManager.let {
+                        progressDialogManager?.dismissProgressDialog()
+                    }
+                }
+                is LoadState.Loading -> {
+                    setProgressDialog()
+                }
+                is LoadState.Error -> {
+                    Toast.makeText(
+                        requireContext(),
+                        loadState.error.localizedMessage,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
     }
 }

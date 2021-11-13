@@ -4,7 +4,7 @@ import android.app.ProgressDialog
 import android.content.Context
 
 class ProgressDialogManager {
-    var progressDialog: ProgressDialog?= null
+    var progressDialog: ProgressDialog? = null
 
     fun showProgressDialog(context: Context, message: String, setCancelable: Boolean) {
         if (progressDialog == null)
@@ -14,8 +14,7 @@ class ProgressDialogManager {
         progressDialog?.show()
     }
 
-    fun dismissProgressDialog(){
+    fun dismissProgressDialog() {
         progressDialog?.dismiss()
     }
-
 }
