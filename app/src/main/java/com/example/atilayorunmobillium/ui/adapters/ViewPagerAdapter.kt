@@ -1,4 +1,4 @@
-package com.example.atilayorunmobillium.adapter
+package com.example.atilayorunmobillium.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -11,9 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.example.atilayorunmobillium.Util.Util.loadImage
-import com.example.atilayorunmobillium.api.ApiService
+import com.example.atilayorunmobillium.data.api.ApiService
 import com.example.atilayorunmobillium.databinding.ItemViewPagerBinding
-import com.example.atilayorunmobillium.model.Results
+import com.example.atilayorunmobillium.data.model.Results
 import kotlin.Boolean as Boolean1
 
 class ViewPagerAdapter(

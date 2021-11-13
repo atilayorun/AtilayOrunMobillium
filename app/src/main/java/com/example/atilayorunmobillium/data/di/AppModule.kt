@@ -1,6 +1,6 @@
-package com.example.atilayorunmobillium.di
+package com.example.atilayorunmobillium.data.di
 
-import com.example.atilayorunmobillium.api.ApiService
+import com.example.atilayorunmobillium.data.api.ApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

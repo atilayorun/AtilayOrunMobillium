@@ -1,4 +1,4 @@
-package com.example.atilayorunmobillium.viewModel
+package com.example.atilayorunmobillium.ui.viewModels
 
 import android.content.res.Resources
 import android.widget.ImageView
@@ -7,9 +7,9 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.atilayorunmobillium.Util.NetworkResult
-import com.example.atilayorunmobillium.api.ApiService
-import com.example.atilayorunmobillium.model.MovieDetail
-import com.example.atilayorunmobillium.repository.RetrofitRepository
+import com.example.atilayorunmobillium.data.api.ApiService
+import com.example.atilayorunmobillium.data.model.MovieDetail
+import com.example.atilayorunmobillium.data.repository.RetrofitRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

@@ -1,18 +1,18 @@
-package com.example.atilayorunmobillium.adapter
+package com.example.atilayorunmobillium.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.request.RequestOptions
 import com.example.atilayorunmobillium.Util.Util.loadImage
-import com.example.atilayorunmobillium.api.ApiService
+import com.example.atilayorunmobillium.data.api.ApiService
 import com.example.atilayorunmobillium.databinding.ItemMoviesUpcomingBinding
-import com.example.atilayorunmobillium.model.Results
+import com.example.atilayorunmobillium.data.model.Results
 
-class MoviesUpcomingAdapter(listener:MoviesUpcomingAdapterListener) : PagingDataAdapter<Results,MoviesUpcomingAdapter.ViewHolder>(ResultsDiffCallback){
+class MoviesUpcomingAdapter(listener: MoviesUpcomingAdapterListener) : PagingDataAdapter<Results, MoviesUpcomingAdapter.ViewHolder>(
+    ResultsDiffCallback
+){
     private val listener = listener
 
     interface MoviesUpcomingAdapterListener{
@@ -27,7 +27,7 @@ class MoviesUpcomingAdapter(listener:MoviesUpcomingAdapterListener) : PagingData
         val clContainer= binding.clContainer
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesUpcomingAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val itemMoviesUpcomingBinding: ItemMoviesUpcomingBinding = ItemMoviesUpcomingBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
@@ -36,7 +36,7 @@ class MoviesUpcomingAdapter(listener:MoviesUpcomingAdapterListener) : PagingData
         return ViewHolder(itemMoviesUpcomingBinding)
     }
 
-    override fun onBindViewHolder(holder: MoviesUpcomingAdapter.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
         holder.tvMovieDate.text = item?.release_date
         holder.tvMovieDescription.text = item?.overview
@@ -52,7 +52,7 @@ class MoviesUpcomingAdapter(listener:MoviesUpcomingAdapterListener) : PagingData
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem:Results, newItem: Results): Boolean {
+        override fun areContentsTheSame(oldItem: Results, newItem: Results): Boolean {
             return oldItem == newItem
         }
     }

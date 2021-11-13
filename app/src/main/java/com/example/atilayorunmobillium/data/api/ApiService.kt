@@ -1,7 +1,7 @@
-package com.example.atilayorunmobillium.api
+package com.example.atilayorunmobillium.data.api
 
-import com.example.atilayorunmobillium.model.MovieDetail
-import com.example.atilayorunmobillium.model.Movies
+import com.example.atilayorunmobillium.data.model.MovieDetail
+import com.example.atilayorunmobillium.data.model.Movies
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Header

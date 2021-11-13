@@ -1,4 +1,4 @@
-package com.example.atilayorunmobillium.ui
+package com.example.atilayorunmobillium.ui.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -17,11 +17,11 @@ import androidx.viewpager.widget.ViewPager
 import com.example.atilayorunmobillium.R
 import com.example.atilayorunmobillium.Util.NetworkResult
 import com.example.atilayorunmobillium.Util.ProgressDialogManager
-import com.example.atilayorunmobillium.adapter.MoviesUpcomingAdapter
-import com.example.atilayorunmobillium.adapter.ViewPagerAdapter
+import com.example.atilayorunmobillium.ui.adapters.MoviesUpcomingAdapter
+import com.example.atilayorunmobillium.ui.adapters.ViewPagerAdapter
 import com.example.atilayorunmobillium.databinding.FragmentMoviesBinding
-import com.example.atilayorunmobillium.model.Results
-import com.example.atilayorunmobillium.viewModel.MoviesViewModel
+import com.example.atilayorunmobillium.data.model.Results
+import com.example.atilayorunmobillium.ui.viewModels.MoviesViewModel
 import com.google.android.material.appbar.AppBarLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -90,7 +90,7 @@ class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterLi
                 positionOffset: Float,
                 positionOffsetPixels: Int
             ) {
-
+                binding.swipe.isEnabled = false
             }
 
             override fun onPageSelected(position: Int) {
@@ -199,6 +199,7 @@ class MoviesFragment : Fragment(), MoviesUpcomingAdapter.MoviesUpcomingAdapterLi
     override fun onDestroyView() {
         super.onDestroyView()
         viewModel.responseNowPlaying.removeObservers(this)
+        _binding = null
     }
 
     private fun addLoadListener() {

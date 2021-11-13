@@ -1,4 +1,4 @@
-package com.example.atilayorunmobillium.ui
+package com.example.atilayorunmobillium.ui.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -13,7 +13,7 @@ import com.example.atilayorunmobillium.R
 import com.example.atilayorunmobillium.Util.NetworkResult
 import com.example.atilayorunmobillium.Util.ProgressDialogManager
 import com.example.atilayorunmobillium.databinding.FragmentMovieDetailBinding
-import com.example.atilayorunmobillium.viewModel.MovieDetailViewModel
+import com.example.atilayorunmobillium.ui.viewModels.MovieDetailViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -30,7 +30,6 @@ class MovieDetailFragment : Fragment() {
     ): View {
         _binding = FragmentMovieDetailBinding.inflate(inflater, container, false)
         setBinding()
-
         viewModelTransactions()
         setObservers()
         return binding.root

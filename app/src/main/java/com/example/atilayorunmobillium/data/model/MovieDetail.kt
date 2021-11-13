@@ -1,4 +1,4 @@
-package com.example.atilayorunmobillium.model
+package com.example.atilayorunmobillium.data.model
 
 import com.google.gson.annotations.SerializedName
 

@@ -1,4 +1,4 @@
-package com.example.atilayorunmobillium.viewModel
+package com.example.atilayorunmobillium.ui.viewModels
 
 import android.content.res.Resources
 import androidx.hilt.lifecycle.ViewModelInject
@@ -11,11 +11,11 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.atilayorunmobillium.R
 import com.example.atilayorunmobillium.Util.NetworkResult
-import com.example.atilayorunmobillium.api.ApiService
-import com.example.atilayorunmobillium.dataStore.MoviesPagingSource
-import com.example.atilayorunmobillium.model.Movies
-import com.example.atilayorunmobillium.model.Results
-import com.example.atilayorunmobillium.repository.RetrofitRepository
+import com.example.atilayorunmobillium.data.api.ApiService
+import com.example.atilayorunmobillium.data.dataStore.MoviesPagingSource
+import com.example.atilayorunmobillium.data.model.Movies
+import com.example.atilayorunmobillium.data.model.Results
+import com.example.atilayorunmobillium.data.repository.RetrofitRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow

@@ -1,9 +1,9 @@
-package com.example.atilayorunmobillium.dataStore
+package com.example.atilayorunmobillium.data.dataStore
 
 import androidx.paging.PagingSource
-import com.example.atilayorunmobillium.api.ApiService
-import com.example.atilayorunmobillium.model.Results
-import com.example.atilayorunmobillium.repository.RetrofitRepository
+import com.example.atilayorunmobillium.data.api.ApiService
+import com.example.atilayorunmobillium.data.model.Results
+import com.example.atilayorunmobillium.data.repository.RetrofitRepository
 import javax.inject.Inject
 
 class MoviesPagingSource @Inject constructor(private val retrofitRepository: RetrofitRepository): PagingSource<Int, Results>(){

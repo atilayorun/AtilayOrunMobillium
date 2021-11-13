@@ -7,14 +7,14 @@
 
         <variable
             name="viewModel"
-            type="com.example.atilayorunmobillium.viewModel.MovieDetailViewModel" />
+            type="com.example.atilayorunmobillium.ui.viewModels.MovieDetailViewModel" />
     </data>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        tools:context=".ui.MovieDetailFragment"
+        tools:context=".ui.fragments.MovieDetailFragment"
         tools:ignore="SpeakableTextPresentCheck">
 
         <androidx.constraintlayout.widget.ConstraintLayout

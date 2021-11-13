@@ -1,7 +1,7 @@
-package com.example.atilayorunmobillium.repository
+package com.example.atilayorunmobillium.data.repository
 
-import com.example.atilayorunmobillium.api.ApiService
-import com.example.atilayorunmobillium.model.Movies
+import com.example.atilayorunmobillium.data.api.ApiService
+import com.example.atilayorunmobillium.data.model.Movies
 import javax.inject.Inject
 
 class RetrofitRepository @Inject constructor(private val apiService: ApiService)  {
